@@ -1,8 +1,0 @@
-Sun, 04 Sep 2011 01:44:13 root         INFO     Satchmo Started
-Sun, 04 Sep 2011 01:44:13 root         INFO     Satchmo Started
-Sun, 04 Sep 2011 01:44:22 tiered.config DEBUG    loaded
-Sun, 04 Sep 2011 01:44:22 shop.listeners DEBUG    Added default shop listeners
-Sun, 04 Sep 2011 01:44:23 product.modules.downloadable.listeners DEBUG    Added downnloadable product listeners
-Sun, 04 Sep 2011 01:44:24 satchmo_toolbar DEBUG    Satchmo toolbar ready
-Sun, 04 Sep 2011 01:44:24 django.db.backends DEBUG    (0.007) SELECT "django_site"."id", "django_site"."domain", "django_site"."name" FROM "django_site" WHERE "django_site"."id" = 1 ; args=(1,)
-Sun, 04 Sep 2011 01:44:24 django.db.backends DEBUG    (0.000) SELECT "django_site"."id", "django_site"."domain", "django_site"."name" FROM "django_site" WHERE "django_site"."id" = 1 ; args=(1,)
