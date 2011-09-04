@@ -1,0 +1,98 @@
+{% extends "product/product.html" %}
+{% load i18n %}
+{% load thumbnail %}
+{% load satchmo_price %}
+{% load satchmo_util %}
+{% load satchmo_currency satchmo_category%}
+{% load satchmo_discounts satchmo_tax %}
+{% load app_plugins %}
+
+{% block extra-head %}
+
+{% include "shop/_jquery.html" %}
+{% include "shop/_jquery_form.html" %}
+<!--<script type="text/javascript" src="{{media_url}}js/satchmo_product.js"></script>-->
+{% blackbird_logging %}
+<script type="text/javascript">{# Javascript which is generated uniquely for each page #}
+satchmo.default_view_tax = {% if default_view_tax %}true{% else %}false{% endif %};
+
+satchmo.variations = {{ details|as_json }};
+
+satchmo.set_option_ids([{% for option_group in options %}{{ option_group.id }}{% if not forloop.last %},{% endif %}{% endfor %}]);
+
+$(function() {
+    satchmo.update_price();
+    $('.priced').change(function() { satchmo.update_price() });
+});
+</script>
+{% endblock %}
+
+{% block productdetail %}
+	<div id="productdetail">
+	<div id="product_images">
+		<div id="product_images_large">
+		{% for pic in product.productimage_set.all %}
+			{% thumbnail pic.picture "660x480" as image %}
+			<div><img src="{{ image }}" width="{{ image.width }}" height="{{ image.height }}" /></div>
+		{% endfor %}
+		</div>
+		<div id="product_images_thumbnails">
+		{% for pic in product.productimage_set.all %}
+			{% thumbnail pic.picture "66x48" crop="center" as image %}
+			<a href=""><img src="{{ image }}" width="{{ image.width }}" height="{{ image.height }}" /></a>
+		{% endfor %}
+		</div>
+	</div>
+	
+	<div id="product_sidebar">
+		<h4 class="title">{{ product.translated_name }}</h4>
+		<p>设计师：<a href="">吴章海</a></p>
+		<!--<p>{{ product.translated_description }}</p>-->
+		<p>{% trans "Price" %}{% if default_view_tax %} {% trans '(incl. tax)' %}{% endif %}:</p>
+		<p><h3>{% spaceless %}
+			{% if sale %}<strike style="display: block;" id="fullprice">{{ product|discount_price:""|currency }}</strike>{% endif %}
+			<span id="price">{{ product|discount_price:sale|currency }}</span>
+		{% endspaceless %}</h3></p>
+		
+		{% with product.translated_attributes as atts %}{% if atts %}
+		<p class="productattributes">
+		{% for att in product.translated_attributes %}
+		{{ att.description }}: {{ att.value }}<br/>
+		{% endfor %}
+		</p>
+		{% endif %}{% endwith %}
+		
+		<form id="options" action="{% url satchmo_smart_add %}" method="post">{% csrf_token %}
+		{% if options %}
+		<p>{% trans "Please choose your options" %}:</p>
+		{% endif %}
+
+			<p class="shop_sizes">
+				<span><strong>男装:</strong>  <a href="">尺码对照表</a></span>
+				<input type="button" name="s" value="S" />
+				<input type="button" name="s" value="M" />
+				<input type="button" name="s" value="L" />
+				<input type="button" name="s" value="XL" />
+				<input type="button" name="s" value="2X" />
+			</p>
+			<p class="shop_sizes">
+				<span><strong>女装:</strong>  <a href="">尺码对照表</a></span>
+				<input type="button" name="s" value="S" />
+				<input type="button" name="s" value="M" />
+				<input type="button" name="s" value="L" />
+				<input type="button" name="s" value="XL" />
+				<input type="button" name="s" value="2X" />
+			</p>
+		<p id="shop_qty">
+			{% trans "Quantity" %} <input type="text" size="2" name="quantity" id="quantity" value="1" class="priced" />
+		</p>
+		<input type="hidden" name="productname" id="productname" value="{{product.slug}}" />
+		<div class="shop_buttons">
+			<input id="addcart" type="submit" name="addcart" value="{% trans "Add to cart" %}" />
+			{% plugin_point "product_add_buttons" %}
+		</div>
+		{% plugin_point "product_form" %}
+		</form>
+	</div>
+	</div>
+{% endblock %}

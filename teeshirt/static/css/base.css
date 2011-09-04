@@ -1,0 +1,336 @@
+body{
+    padding: 0;
+    margin: 0;
+	background-color: #f7f7f7;
+}
+ul{
+list-style-type: none;
+padding: 0;
+margin: 0;
+}
+h1, h2, h4, ul, li, li a, p {
+float: left;
+}
+body, div, dl, dt, dd, ul, ol, li, pre, form, fieldset, input, button, select, option, textarea, p, blockquote, th, td {
+font: 12px/20px arial, helvetica, verdana, tahoma, sans-serif;
+}
+.base .title .name, .base .title a {
+font: bold 16px/24px "Microsoft YaHei";
+font-size: 18px;
+padding: 5px 10px;
+margin: 0;
+}
+.clear{clear:both;}
+a{
+    color: #3D89C8;
+    text-decoration: none;
+}
+.title{
+    width: 100%;
+}
+#container{
+	width: 100%;
+	height: auto;
+}
+#top{
+	background: url(../images/top_bg.gif) repeat-x;
+	height: 100px;
+    color: #d2d2d2;
+}
+#header, #nav, #navbar, #main, #content, #content_wrap, #footer{
+    width: 1000px;
+    margin: 0 auto;
+    position: relative;
+}
+#logo{
+	background: url(../images/logo.gif) no-repeat top left;
+}
+#accountinfo{
+	position: absolute;
+	top: 0;
+	right: 0;
+	width: 470px;
+	height: 100px;
+    text-align: right;
+    padding-top: 10px;
+}
+#accountinfo a{
+    color: #d2d2d2;
+}
+#accountinfo a:hover{
+    text-decoration: underline;
+}
+#page_search{
+	background: url(../images/header_search_bg.gif) no-repeat;
+	width: 250px;
+	height: 40px;
+	position: absolute;
+	top: 45px;
+	right: 0px;
+}
+#nav_bg{background-color: #0b0b0b;}
+#nav{
+	background-color: #0b0b0b;
+	height: 40px;
+    clear: both;
+}
+.menu ul#topnav li a{
+	font-family: "Microsoft YaHei";
+	font-size: 16px;
+	font-weight: bold;
+	color:#d2d2d2;
+	height: 40px;
+	line-height: 40px;
+	padding: 0 20px;
+	background: url(../images/nav_line.gif) no-repeat right top transparent;
+}
+.menu ul#topnav li a.last{background: none;}
+.menu ul#topnav li a:hover{
+	color: #FFFFFF;
+	background-color: #545454;
+}
+.active{
+	color: #FFFFFF;
+	background-color: #545454;
+}
+.menu ul#topnav {
+	margin: 0; padding: 0;
+	float:left;
+	width: 100%;
+	list-style: none;
+	font-size: 1.1em;
+}
+.menu ul#topnav li {
+	float: left;
+	margin: 0; padding: 0;
+	position: relative;
+}
+ul#topnav li .sub {display:none}
+
+#navbar_bg{background-color: #343434;height: 40px; color: #d2d2d2;}
+#navbar li{
+    line-height: 40px;
+}
+#navbar li a{
+	color: #d2d2d2;
+}
+#navbar li a:hover{
+	text-decoration: underline;
+}
+
+.title h4{
+    font-size: 18px;
+    margin: 5px 0;
+}
+#content{
+    height: auto;
+    overflow: hidden;
+    margin-top: 20px;
+}
+.sidebar{
+    clear: left;
+    padding: 0;
+    border-top: 3px solid #ccc;
+}
+.sidebar.left{
+    width: 144px;
+    float: left;
+    margin-right: 20px;
+}
+.sidebar .section{
+    font-size: 12px;
+    border-bottom: 1px solid #ccc;
+    padding: 0 0 15px 0;
+    float: left;
+}
+.sidebar .section ul{
+    padding: 0;
+    margin: 0;
+}
+.sidebar .section li{
+    width: 67px;
+    /*background-color: #4E8CC7;*/
+    border-color: #4E8CC7;
+    border: 1px solid #CFE2F1;
+    margin: 0 5px 5px 0;
+    -moz-border-radius: 2px;
+    -webkit-border-radius: 2px;
+}
+.sidebar .section li:nth-child(2n) {
+margin-right: 0;
+}
+.sidebar .section li a{
+    /*color: #FFF;*/
+    background: none;
+    float: left;
+    margin-left: 0;
+    padding: 6px 0 5px 0;
+    text-align: center;
+    width: 100%;
+}
+.sidebar .section li a:hover{
+    color: #FFF;
+    background-color: #4E8CC7;
+}
+.sidebar .section .active, .sidebar .section li:hover {
+    background-color: #4E8CC7;
+    border-color: #4E8CC7;
+    color: #FFF;
+}
+.sidebar .section .active a, .sidebar .section li:hover a, .sidebar .section li a:hover {
+    color: white;
+    text-decoration: none;
+}
+
+.box-product{
+    border-top: 3px solid #ccc;
+}
+.product-list{
+    height: auto;
+    /*width: 600px;
+	width: 660px !important;*/
+    float: left;
+	padding: 0;
+}
+.product-item{
+    margin: 0 20px 20px 0;
+    font-size: 12px;
+    float: left;
+    width: 150px;
+}
+div.product-item:nth-of-type(6n+6){
+    margin-right: 0;
+}
+.product-item span a, .product-item span a:visited{
+    display: block;
+    line-height: 20px;
+	color: #2b2b2b;
+}
+.product-item span a:hover{text-decoration: underline;}
+#footer_bg{background-color: #343434;}
+#footer{
+	color: #d2d2d2;
+	height: 100px;
+	width: 1000px;
+    text-align: center;
+}
+
+/* paginator */
+
+#pagination{
+	float: left;
+	width: 600px;
+	width: 660px !important;
+	margin-bottom: 10px;
+}
+#pagination ul{float: right;}
+#pagination ul li{
+	margin: 0 3px;
+	border: 1px solid #878787;
+}
+#pagination ul li a{padding: 0 3px;}
+#pagination ul li a.pagenum,
+#pagination ul li a.pagenum:visited{
+	display: block;
+	float: left;
+	width: 14px;
+	text-align: center;
+	color: #343434;
+}
+#pagination ul li a:hover{
+	background-color: #d2d2d2;
+}
+#pagination ul li.currentpage{
+	font-weight: bold;
+	border: none;
+}
+
+/* end paginator */
+
+/* product detail */
+
+#productdetail{
+
+}
+#productdetail h4.title{
+	font: bold 16px/24px "Microsoft YaHei";
+	font-size: 18px;
+	padding: 5px 0;
+	margin: 0;
+}
+#productdetail h3 #fullprice, #productdetail h3 #price{
+	display: inline;
+	font-size: 18px;
+	margin-right: 20px;
+}
+#productdetail #product_images{
+	float: left;
+	margin-right: 20px;
+}
+#productdetail #product_images #product_images_large{
+	float: left;
+	overflow: hidden;
+	width: 660px;
+	height: 480px;
+}
+#productdetail #product_images #product_images_thumbnails{
+	clear: left;
+	padding: 5px 0;
+}
+#productdetail #product_images #product_images_thumbnails a{
+	display: block;
+	float:left;
+	border: 1px solid #f7f7f7;
+}
+#productdetail #product_images #product_images_thumbnails a:hover{
+	border: 1px solid #343434;
+}
+#productdetail #product_sidebar{
+	width: 320px;
+	width: 278px !important;
+	min-height: 480px;
+	min-height: 460px !important;
+	padding: 10px 20px;
+	float: right;
+	background: url(../images/box_bg.gif) repeat-x;
+	border: 1px solid #a1a1a1;
+}
+#productdetail #product_sidebar p{
+	width: 100%;
+	padding: 0;
+	margin: 5px 0;
+}
+.shop_buttons input{
+	border: none;
+	background-color: #f36f0b;
+	height: 35px;
+	font-size: 18px;
+	font-weight: bold;
+	color: #FFF;
+}
+.shop_sizes span{
+	display: block;
+	padding:0;
+	margin:0 0 5px 0;
+	
+}
+.shop_sizes input{
+	border: none;
+	background: url(../images/size.gif) no-repeat;
+	height: 40px;
+	width: 40px;
+	margin-right: 10px;
+	color: #343434;
+	font-size: 18px;
+	font-weight: bold;
+	cursor: pointer;
+}
+.shop_sizes input:hover{
+	background: url(../images/size_hover.gif) no-repeat;
+	color: #f7f7f7;
+}
+#shop_qty{
+	margin: 10px 0;
+}
+
+/* end product detail */

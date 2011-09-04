@@ -1,0 +1,117 @@
+{% load i18n satchmo_category satchmo_google satchmo_util satchmo_currency satchmo_discounts app_plugins normalize_decimal %}
+{% block doctype %}<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+{% endblock %}
+<head>
+    {% block extra-head %}{% endblock %}
+    {% block stylesheet %}
+		<link rel="stylesheet" href="{{ media_url }}css/base.css" />
+	{% endblock %}
+    <title>{% block title %}{{ shop_name }}{% if pagetitle %}: {{ pagetitle }}{% endif %}{% endblock %}</title>
+    {% plugin_point "page_head" %}
+</head>
+{% block body %}
+<body{% if bodyid %} id="{{ bodyid }}"{% endif %}{% if bodyclass %} class="{{ bodyclass }}"{% endif %}>
+    {% plugin_point "page_top" %}
+    <div id="container">
+	<div id="top">
+	    <div id="header">
+			<div id="logo">
+				<img alt="" src="{{ media_url }}images/logo.gif" />
+			</div>
+			<div id="accountinfo">
+				<span>欢迎来到T-Show！</span>
+				{% if user.is_staff %}
+				<a href="{% url admin:index %}" target="blank">管理员</a>
+				{% endif %}
+				{% if user.is_authenticated %}
+				{% url satchmo_account_info as accounturl %}
+				{% if accounturl %}<a href="{{ accounturl }}" target="blank">{{ user.username }}</a>{% endif %}
+				<a href="{{ logout_url }}?next={{request.path}}">注销</a>
+				{% else %}
+				<a href="{{ login_url }}?next={{request.path}}">登陆</a>
+				{% endif %}
+				
+				{% url satchmo_cart as carturl %}
+				{% if carturl %}<a href="{{ carturl }}">购物车</a>{% endif %}
+		
+				{% if not cart.is_empty %}
+					({{ cart_count|normalize_decimal }} - {% if sale %}{{ cart|discount_cart_total:sale|currency }}{% else %}{{cart.total|currency}}{% endif%})
+					{% url satchmo_checkout-step1 as checkouturl %}
+					{% if checkouturl %}<a href="{{ checkouturl }}">结算</a>{% endif %}
+				{% endif %}
+			</div>
+			<div id="page_search"></div>
+			<!--<div>
+				{% satchmo_search_form %}
+			</div>-->
+			<!--{% satchmo_language_selection_form %}-->
+		</div>
+	</div>
+	<div id="nav_bg">
+	<div id="nav">
+		<div class="menu">
+			<ul id="topnav">
+				<li><a href="#" class="menuitem">每日T恤</a></li>
+				<li>
+					<a href="#" class="menuitem">商店</a>
+					<div class="sub">
+						<ul>
+							{% for cat in categories %}
+								<li><a href="">{{cat.name}}</a></li>	
+							{% endfor %}
+						</ul>
+					</div>
+				</li>
+				<li>
+					{% url satchmo_product_recently_added as recenturl %}
+					{% if recenturl %}<a class="menuitem" href="{{ recenturl }}">新品</a>{% endif %}
+				</li>
+				<li><a href="#" class="menuitem">设计比赛</a></li>
+				<li><a href="#" class="menuitem">投票</a></li>
+				<li><a href="#" class="menuitem">提交作品</a></li>
+				<li><a href="#" class="menuitem">论坛</a></li>
+				<li><a href="#" class="menuitem">博客</a></li>
+				<li><a href="#" class="menuitem">帮助</a></li>
+				<li><a href="#" class="menuitem">关于我们</a></li>
+				<li>
+					{% url satchmo_contact as contact_url %}
+					{% if contact_url %}<a class="menuitem last" href="{{ contact_url }}">联系我们</a>{% endif %}
+				</li>
+			</ul>
+		</div>
+	</div>
+	</div>
+	<div id="navbar_bg">
+	<div id="navbar">
+	    <ul>
+		{% block navbar %}Breadcrumbs here{% endblock %}
+	    </ul>
+	</div>
+	</div>
+	<div id="main">	
+		<div id="content">
+			{% block content %}{% endblock %}
+		</div>
+	</div>
+	<div id="footer_bg">
+	<div id="footer">
+		{% block footer %}
+		{% blocktrans %}Powered by <a href="http://www.satchmoproject.com">Satchmo</a>.{% endblocktrans %}
+		{% endblock %}
+	</div>
+	</div>
+    </div>
+	{% block page-close %}
+	    {% block google-tracker %}
+		{% if shop.options.GOOGLE.ANALYTICS.value %}
+		    {% show_tracker is_secure %}
+		{% endif %}
+	    {% endblock %}
+	{% endblock %}
+</body>
+{% endblock %}
+</html>
