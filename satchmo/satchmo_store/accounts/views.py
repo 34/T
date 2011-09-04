@@ -7,7 +7,7 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.utils.translation import ugettext_lazy as _
 from django.views.decorators.cache import never_cache
-from forms import RegistrationAddressForm, RegistrationForm, EmailAuthenticationForm
+from forms import RegistrationAddressForm, RegistrationForm, EmailAuthenticationForm, AddressBookForm
 from l10n.models import Country
 from livesettings import config_get_group, config_value
 from satchmo_store.accounts.mail import send_welcome_email
@@ -15,6 +15,8 @@ from satchmo_store.accounts import signals
 from satchmo_store.contact import CUSTOMER_ID
 from satchmo_store.contact.models import Contact
 from satchmo_store.shop.models import Config, Cart
+from satchmo_store.accounts.models import AddressBook
+from satchmo_store.shop.models import Config
 
 import logging
 
@@ -24,6 +26,27 @@ YESNO = (
     (1, _('Yes')),
     (0, _('No'))
 )
+
+def view_address(request, template_name=''):
+    try:
+        address_data = AddressBook.objects.get(user=request.user)
+    except:
+        address_date = None
+        
+    return render_to_response(template_name, RequestContext(request, {'address_data': address_data}))
+
+def add_address(request, template_name='accounts/address_form.html'):
+    shop = Config.objects.get_current()
+    
+    initial = {
+        'country': shop.sales_country,
+        'province': shop.sales_country.adminarea_set.all().filter(parent=None)
+    }
+    
+    address_form = AddressBookForm(initial = initial)
+    
+    return render_to_response(template_name, RequestContext(request, {'form': address_form}))
+    
 
 def emaillogin(request, template_name='registration/login.html',
     auth_form=EmailAuthenticationForm, redirect_field_name=REDIRECT_FIELD_NAME):

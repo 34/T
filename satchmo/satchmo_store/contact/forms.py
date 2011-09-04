@@ -4,7 +4,7 @@ from django.forms.extras.widgets import SelectDateWidget
 from django.utils.translation import ugettext_lazy as _, ugettext
 from l10n.models import Country
 from livesettings import config_value
-from satchmo_store.contact.models import Contact, AddressBook, PhoneNumber, Organization, ContactRole
+from satchmo_store.contact.models import Contact, AddressBook, PhoneNumber
 from satchmo_store.shop.models import Config
 from satchmo_store.shop.utils import clean_field
 from signals_ahoy.signals import form_init, form_initialdata, form_postsave
@@ -39,7 +39,6 @@ class ContactInfoForm(ProxyContactForm):
     last_name = forms.CharField(max_length=30, label=_('Last Name'), required=False)
     phone = forms.CharField(max_length=30, label=_('Phone'), required=False)
     addressee = forms.CharField(max_length=61, label=_('Addressee'), required=False)
-    organization = forms.CharField(max_length=50, label=_('Organization'), required=False)
     street1 = forms.CharField(max_length=30, label=_('Street'), required=False)
     street2 = forms.CharField(max_length=30, required=False)
     city = forms.CharField(max_length=30, label=_('City'), required=False)
@@ -352,9 +351,6 @@ class ContactInfoForm(ProxyContactForm):
                 setattr(customer, field, data[field])
             except KeyError:
                 pass
-
-        if not customer.role:
-            customer.role = ContactRole.objects.get(pk='Customer')
 
         customer.save()
 

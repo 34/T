@@ -7,14 +7,19 @@ from django.utils.translation import ugettext_lazy as _, ugettext
 from satchmo_store.accounts.mail import send_welcome_email
 from livesettings import config_value
 from satchmo_store.contact.forms import ContactInfoForm
-from satchmo_store.contact.models import Contact, ContactRole
+from satchmo_store.contact.models import Contact
 from satchmo_utils.unique_id import generate_id
 from signals_ahoy.signals import form_init, form_initialdata
+from satchmo_store.accounts.models import AddressBook
 
 import logging
 import signals
 
 log = logging.getLogger('accounts.forms')
+
+class AddressBookForm(forms.ModelForm):
+    class Meta:
+        model = AddressBook
 
 class EmailAuthenticationForm(AuthenticationForm):
     """Authentication form with a longer username field."""
@@ -133,7 +138,6 @@ class RegistrationForm(forms.Form):
         contact.first_name = first_name
         contact.last_name = last_name
         contact.email = email
-        contact.role = ContactRole.objects.get(pk='Customer')
         contact.title = data.get('title', '')
         contact.save()
 

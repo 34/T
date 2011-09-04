@@ -35,3 +35,12 @@ class CountryOptions(admin.ModelAdmin):
 
 admin.site.register(Country, CountryOptions)
 
+class AdminAreaOptions(admin.ModelAdmin):
+    list_display = ('country', 'name', 'parent', 'active')
+    list_filter = ('name', 'active')
+    search_fields = ('country', 'name')
+    inlines = [AdminArea_Inline]
+    
+admin.site.register(AdminArea, AdminAreaOptions)
+    
+

@@ -20,6 +20,8 @@ from satchmo_store import accounts
 # that way it can return a sensible "invalid key" message instead of a
 # confusing 404.
 urlpatterns += patterns('satchmo_store.accounts.views',
+    (r'^address/$', 'view_address', {}, 'account_address'),
+    (r'^address/add/$', 'add_address', {}, 'add_account_address'),
     (r'^activate/(?P<activation_key>\w+)/$', 'activate', {}, 'registration_activate'),
     (r'^login/$', 'emaillogin', {'template_name': 'registration/login.html'}, 'auth_login'),
     (r'^register/$', 'register', {}, 'registration_register'),

@@ -73,7 +73,8 @@ class AdminArea(models.Model):
     Administrative Area level 1 for a country.  For the US, this would be the states
     """
     country = models.ForeignKey(Country)
-    name = models.CharField(_('Admin Area name'), max_length=60, )
+    name = models.CharField(_('Admin Area name'), max_length=60)
+    parent = models.ForeignKey('self', blank=True, null=True, related_name='Children', verbose_name = _('Parent'))
     abbrev = models.CharField(_('Postal Abbreviation'), max_length=3, null=True, blank=True)
     active = models.BooleanField(_('Area is active'), default=True)
 
