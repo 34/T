@@ -6,6 +6,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 {% endblock %}
 <head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     {% block extra-head %}{% endblock %}
     {% block stylesheet %}<link rel="stylesheet" href="{{ media_url }}css/style.css" />{% endblock %}
     <title>{% block title %}{{ shop_name }}{% if pagetitle %}: {{ pagetitle }}{% endif %}{% endblock %}</title>

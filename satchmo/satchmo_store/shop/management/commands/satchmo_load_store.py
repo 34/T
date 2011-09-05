@@ -7,11 +7,6 @@ class Command(NoArgsCommand):
         from satchmo_store.contact.models import (
             AddressBook,
             Contact,
-            ContactOrganization,
-            ContactOrganizationRole,
-            ContactRole,
-            Organization,
-            PhoneNumber,
         )
         from product.models import (
             Category,

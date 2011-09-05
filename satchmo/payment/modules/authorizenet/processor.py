@@ -338,7 +338,7 @@ class PaymentProcessor(BasePaymentProcessor):
             'x_state' : order.bill_state,
             'x_zip' : order.bill_postal_code,
             'x_country': order.bill_country,
-            'x_phone' : order.contact.primary_phone.phone,
+            'x_phone' : order.contact.primary_phone,
             'x_email' : order.contact.email,
             }
 

@@ -1,3 +1,4 @@
+# coding=utf-8
 from django import http
 from django.contrib.auth import REDIRECT_FIELD_NAME
 from django.contrib.auth.decorators import login_required
@@ -68,14 +69,14 @@ def update(request):
             #If a person has their contact info, make sure we populate it in the form
             for item in contact.__dict__.keys():
                 init_data[item] = getattr(contact,item)
-            if contact.shipping_address:
-                for item in contact.shipping_address.__dict__.keys():
-                    init_data["ship_"+item] = getattr(contact.shipping_address,item)
-            if contact.billing_address:
-                for item in contact.billing_address.__dict__.keys():
-                    init_data[item] = getattr(contact.billing_address,item)
+            #if contact.shipping_address:
+            #    for item in contact.shipping_address.__dict__.keys():
+            #        init_data["ship_"+item] = getattr(contact.shipping_address,item)
+            #if contact.billing_address:
+            #    for item in contact.billing_address.__dict__.keys():
+            #        init_data[item] = getattr(contact.billing_address,item)
             if contact.primary_phone:
-                init_data['phone'] = contact.primary_phone.phone
+                init_data['phone'] = contact.primary_phone
 
 
         signals.satchmo_contact_view.send(contact, contact=contact, contact_dict=init_data)

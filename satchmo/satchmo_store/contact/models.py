@@ -1,5 +1,4 @@
 # coding=utf-8
-
 """
 Stores customer, organization, and order information.
 """
@@ -65,20 +64,21 @@ class Contact(models.Model):
     A customer, supplier or any individual that a store owner might interact
     with.
     """
-    title = models.CharField(_("Title"), max_length=30, blank=True, null=True)
-    first_name = models.CharField(_("First name"), max_length=30, )
-    last_name = models.CharField(_("Last name"), max_length=30, )
-    user = models.ForeignKey(User, blank=True, null=True, unique=True)
-    dob = models.DateField(_("Date of birth"), blank=True, null=True)
-    email = models.EmailField(_("Email"), blank=True, max_length=75)
-    notes = models.TextField(_("Notes"), max_length=500, blank=True)
-    create_date = models.DateField(_("Creation date"))
+    title = models.CharField(_(u"昵称"), max_length=30, blank=True, null=True)
+    name = models.CharField(_(u"姓名"), max_length=30, )
+    user = models.ForeignKey(User, blank=True, null=True, unique=True, verbose_name=_(u"用户"))
+    dob = models.DateField(_(u"生日"),blank=True, null=True)
+    phone = models.CharField(_(u"手机"), max_length=30, blank=True, null=True)
+    fixed_phone = models.CharField(_(u"固定电话"), max_length=30, blank=True, null=True)
+    email = models.EmailField(_(u"邮箱"), blank=True, max_length=75)
+    notes = models.TextField(_(u"备注"), max_length=500, blank=True)
+    create_date = models.DateField(_(u"创建日期"))
 
     objects = ContactManager()
 
     def _get_full_name(self):
         """Return the person's full name."""
-        return u'%s %s' % (self.first_name, self.last_name)
+        return u'%s' % self.name
     full_name = property(_get_full_name)
 
     def _shipping_address(self):
@@ -89,20 +89,9 @@ class Contact(models.Model):
             return None
     shipping_address = property(_shipping_address)
 
-    def _billing_address(self):
-        """Return the default billing address or None."""
-        try:
-            return self.addressbook_set.get(is_default_billing=True)
-        except AddressBook.DoesNotExist:
-            return None
-    billing_address = property(_billing_address)
-
     def _primary_phone(self):
         """Return the default phone number or None."""
-        try:
-            return self.phonenumber_set.get(primary=True)
-        except PhoneNumber.DoesNotExist:
-            return None
+        return self.phone
     primary_phone = property(_primary_phone)
 
     def __unicode__(self):
@@ -114,18 +103,14 @@ class Contact(models.Model):
             self.create_date = datetime.date.today()
         # Validate contact to user sync
         if self.user:
-            dirty = False
+            dirty = Falses
             user = self.user
             if user.email != self.email:
                 user.email = self.email
                 dirty = True
 
-            if user.first_name != self.first_name:
-                user.first_name = self.first_name
-                dirty = True
-
-            if user.last_name != self.last_name:
-                user.last_name = self.last_name
+            if user.username != self.name:
+                user.username = self.name
                 dirty = True
 
             if dirty:
@@ -138,83 +123,30 @@ class Contact(models.Model):
         verbose_name = _("Contact")
         verbose_name_plural = _("Contacts")
 
-PHONE_CHOICES = (
-    ('Work', _('Work')),
-    ('Home', _('Home')),
-    ('Fax', _('Fax')),
-    ('Mobile', _('Mobile')),
-)
-
-class PhoneNumber(models.Model):
-    """
-    Phone number associated with a contact.
-    """
-    contact = models.ForeignKey(Contact)
-    type = models.CharField(_("Description"), choices=PHONE_CHOICES,
-        max_length=20, blank=True)
-    phone = models.CharField(_("Phone Number"), blank=True, max_length=30,
-        )
-    primary = models.BooleanField(_("Primary"), default=False)
-
-    def __unicode__(self):
-        return u'%s - %s' % (self.type, self.phone)
-
-    def save(self, **kwargs):
-        """
-        If this number is the default, then make sure that it is the only
-        primary phone number. If there is no existing default, then make
-        this number the default.
-        """
-        existing_number = self.contact.primary_phone
-        if existing_number:
-            if self.primary:
-                existing_number.primary = False
-                super(PhoneNumber, existing_number).save()
-        else:
-            self.primary = True
-        super(PhoneNumber, self).save(**kwargs)
-
-    class Meta:
-        ordering = ['-primary']
-        verbose_name = _("Phone Number")
-        verbose_name_plural = _("Phone Numbers")
-
 class AddressBook(models.Model):
     """
     Address information associated with a contact.
     """
     contact = models.ForeignKey(Contact)
-    description = models.CharField(_("Description"), max_length=20, blank=True,
-        help_text=_('Description of address - Home, Office, Warehouse, etc.',))
-    addressee = models.CharField(_("Addressee"), max_length=80)
-    street1 = models.CharField(_("Street"), max_length=80)
-    street2 = models.CharField(_("Street"), max_length=80, blank=True)
-    state = models.CharField(_("State"), max_length=50, blank=True)
-    city = models.CharField(_("City"), max_length=50)
-    postal_code = models.CharField(_("Zip Code"), max_length=30)
-    country = models.ForeignKey(Country, verbose_name=_("Country"))
-    is_default_shipping = models.BooleanField(_("Default Shipping Address"),
-        default=False)
-    is_default_billing = models.BooleanField(_("Default Billing Address"),
-        default=False)
+    name = models.CharField(_(u'收货人'), max_length=50)
+    country = models.ForeignKey(Country, null=True, verbose_name=_(u'国家'))
+    province = models.CharField(_(u'省'), max_length=50)
+    city = models.CharField(_(u'城市'), max_length=50)
+    region = models.CharField(_(u'县/区'), max_length=100)
+    street = models.CharField(_(u'详细地址'), max_length=256)
+    postal_code = models.CharField(_(u'邮政编码'), max_length=10)
+    phone = models.CharField(_(u'手机'), max_length=20)
+    fixed_phone = models.CharField(_(u'固定电话'), max_length=30)
+    is_default_shipping = models.BooleanField(_(u'默认地址'), default=False)
 
     def __unicode__(self):
-       return u'%s - %s' % (self.contact.full_name, self.description)
+       return u'%s' % self.name
 
     def save(self, **kwargs):
         """
-        If this address is the default billing or shipping address, then
-        remove the old address's default status. If there is no existing
-        default, then make this address the default.
+        假如这个地址是默认地址，那么就会移除旧地址的默认地址属性。
+        如果还没有默认地址，那么就将这个地址设为默认地址。
         """
-        existing_billing = self.contact.billing_address
-        if existing_billing:
-            if self.is_default_billing:
-                existing_billing.is_default_billing = False
-                super(AddressBook, existing_billing).save()
-        else:
-            self.is_default_billing = True
-
         existing_shipping = self.contact.shipping_address
         if existing_shipping:
             if self.is_default_shipping:
@@ -226,7 +158,7 @@ class AddressBook(models.Model):
         super(AddressBook, self).save(**kwargs)
 
     class Meta:
-        verbose_name = _("Address Book")
-        verbose_name_plural = _("Address Books")
+        verbose_name = _("Address")
+        verbose_name_plural = _("Addressee")
 
 import config

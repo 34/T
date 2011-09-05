@@ -56,7 +56,7 @@ class PaymentProcessor(BasePaymentProcessor):
             'state' 	: data.bill_state,
             'zip' 	:data.bill_postal_code,
             'country'	: data.bill_country,
-            'phone' 	: data.contact.primary_phone.phone,
+            'phone' 	: data.contact.primary_phone,
             # other possibiliities include email, ip, offlineauthcode, etc
 
             # transaction data
