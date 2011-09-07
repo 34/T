@@ -18,8 +18,8 @@ gettext_noop = lambda s:s
 
 LANGUAGE_CODE = 'zh_CN'
 LANGUAGES = (
-   ('en', gettext_noop('English')),
    ('zh_CN', gettext_noop('Chinese')),
+   #('en', gettext_noop('English')),
 )
 
 #These are used when loading the test data

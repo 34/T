@@ -1,3 +1,4 @@
+# coding=utf-8
 from django.conf import settings
 from django.contrib.auth import login, REDIRECT_FIELD_NAME
 from django.contrib.sites.models import Site, RequestSite
@@ -225,8 +226,7 @@ def register_handle_form(request, redirect=None):
             contact = Contact.objects.from_request(request, create=False)
             initial_data = {
                 'email': contact.email,
-                'first_name': contact.first_name,
-                'last_name': contact.last_name,
+                'username': contact.name
             }
         except Contact.DoesNotExist:
             log.debug("No contact in request")
@@ -380,7 +380,7 @@ def register(request, redirect=None, template='registration/registration_form.ht
 
         ctx = {
             'form': todo,
-            'title' : _('Registration Form'),
+            'title' : _(u'注册'),
             'show_newsletter' : show_newsletter
         }
 

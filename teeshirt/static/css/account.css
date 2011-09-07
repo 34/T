@@ -1,0 +1,49 @@
+.register_form{
+    float:left;
+    width: 618px;
+    padding: 20px 0;
+}
+
+.register_form label{
+    display: block;
+    float: left;
+    width: 100px;
+    text-align: right;
+    font-size: 14px;
+}
+.register_form input{
+    width: 200px;
+    height: 19px;
+    float: left;
+    line-height: 19px;
+    margin-top:10px;
+    border: 1px solid #A5AFC3
+}
+.register_form .newsletter input{
+    float: left;
+    width: 20px;
+    margin-top: 13px;
+    padding-left: 0;
+    margin-left: 0;
+}
+.reg_btn{
+    padding-left: 120px;
+}
+.reg_btn input{
+    height: 30px;
+    line-height: 30px;
+}
+.gray{
+    height: 44px;
+    line-height: 44px;
+    padding: 5px 20px;
+}
+.error_msg{
+    float: left;
+    border: 1px solid red;
+    width: 200px;
+    height: 19px;
+    line-height: 19px;
+    color: red;
+    margin: 11px 5px;
+}

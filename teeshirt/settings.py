@@ -115,7 +115,7 @@ INSTALLED_APPS = (
     'tax.modules.area',
     'tax.modules.percent',
     'shipping',
-    'satchmo_store.contact.supplier',
+    #'satchmo_store.contact.supplier',
     'shipping.modules.tiered',
     'satchmo_ext.newsletter',
     'satchmo_ext.recentlist',
@@ -142,6 +142,7 @@ INSTALLED_APPS = (
     #'debug_toolbar',
     'app_plugins',
     'teeshirt.localsite',
+    'south',
 )
 
 AUTHENTICATION_BACKENDS = (
