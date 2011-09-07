@@ -98,7 +98,7 @@
         {% else %}
 	<spacer length="0.8cm" width="1mm"/>
 	{% endifnotequal %}
-	<para>{% trans "Phone" %}: {{order.contact.primary_phone.phone}}</para>
+	<para>{% trans "Phone" %}: {{order.contact.primary_phone}}</para>
 	<para>{% trans "Email" %}: {{order.contact.email}}</para>
 
 	<nextFrame/>

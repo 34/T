@@ -108,7 +108,7 @@
     <para>{{order.bill_city}}, {{order.bill_state}}</para>
     <para>{{order.bill_postal_code}}</para>
     <spacer length="0.8cm" width="1mm"/>
-    <para>{% trans "Phone" %}: {{order.contact.primary_phone.phone}}</para>
+    <para>{% trans "Phone" %}: {{order.contact.primary_phone}}</para>
     <para>{% trans "Email" %}: {{order.contact.email}}</para>
 
     <nextFrame/>

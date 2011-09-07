@@ -34,9 +34,10 @@ class ProxyContactForm(forms.Form):
         super(ProxyContactForm, self).__init__(*args, **kwargs)
 
 class ContactInfoForm(ProxyContactForm):
-    email = forms.EmailField(max_length=75, label=_(u'邮箱'), required=False)
+    email = forms.EmailField(max_length=75, label=_(u'邮箱'), required=True)
     title = forms.CharField(max_length=30, label=_(u'昵称'), required=False)
     name = forms.CharField(max_length=30, label=_(u'姓名'), required=False)
+    sex = forms.CharField(max_length=1, label=_(u'性别'), required=False)
     phone = forms.CharField(max_length=30, label=_(u'手机'), required=False)
     fixed_phone = forms.CharField(max_length=30, label=_(u'固定电话'), required=False)
     province = forms.CharField(max_length=30, label=_(u'省'), required=False)
@@ -67,7 +68,7 @@ class ContactInfoForm(ProxyContactForm):
         self._default_country = shop.sales_country
         shipping_country = (self._contact and getattr(self._contact.shipping_address, 'country', None)) or self._default_country
         #self.fields['country'] = forms.ModelChoiceField(shop.countries(), required=False, label=_(u'国家'), empty_label=None, initial=billing_country.pk)
-        self.fields['ship_country'] = forms.ModelChoiceField(shop.countries(), required=False, label=_(u'国家'), empty_label=None, initial=shipping_country.pk)
+        self.fields['country'] = forms.ModelChoiceField(shop.countries(), required=False, label=_(u'国家'), empty_label=None, initial=shipping_country.pk)
 
         if self.enforce_state:
             # if self.is_bound and not self._local_only:
@@ -78,7 +79,7 @@ class ContactInfoForm(ProxyContactForm):
                 # We don't really care if country fields are empty;
                 # area_choices_for_country() handles those cases properly.
                 #billing_country_data = clean_field(self, 'country')
-                shipping_country_data = clean_field(self, 'ship_country')
+                shipping_country_data = clean_field(self, 'country')
 
                 if shipping_country_data:
                     shipping_country = shipping_country_data
@@ -98,13 +99,13 @@ class ContactInfoForm(ProxyContactForm):
         form_init.send(self.__class__, form=self)
 
     def _check_state(self, data, country):
-        if country and self.enforce_state and country.adminarea_set.filter(active=True).count() > 0:
+        if country and self.enforce_state and country.adminarea_set.filter(active=True, parent=None).count() > 0:
             if not data or data == selection:
                 raise forms.ValidationError(
                     self._local_only and _('This field is required.') \
                                or _('State is required for your country.'))
             if (country.adminarea_set
-                        .filter(active=True)
+                        .filter(active=True, parent=None)
                         .filter(Q(name__iexact=data)|Q(abbrev__iexact=data))
                         .count() != 1):
                 raise forms.ValidationError(_('Invalid state or province.'))
@@ -126,7 +127,7 @@ class ContactInfoForm(ProxyContactForm):
 
     def clean_postal_code(self):
         postcode = self.cleaned_data.get('postal_code')
-        if not postcode and 'postal_code' not in self.required_billing_data:
+        if not postcode:# and 'postal_code' not in self.required_billing_data:
             return postcode
         country = None
 
@@ -144,8 +145,8 @@ class ContactInfoForm(ProxyContactForm):
 
         return self.validate_postcode_by_country(postcode, country)
 
-    def clean_state(self):
-        data = self.cleaned_data.get('state')
+    def clean_province(self):
+        data = self.cleaned_data.get('province')
         if self._local_only:
             country = self._default_country
         else:
@@ -154,14 +155,6 @@ class ContactInfoForm(ProxyContactForm):
                 raise forms.ValidationError(_('This field is required.'))
         self._check_state(data, country)
         return data
-
-    def clean_addressee(self):
-        if not self.cleaned_data.get('addressee'):
-            first_and_last = u' '.join((self.cleaned_data.get('first_name', ''),
-                                       self.cleaned_data.get('last_name', '')))
-            return first_and_last
-        else:
-            return self.cleaned_data['addressee']
 
     def clean_country(self):
         if self._local_only:

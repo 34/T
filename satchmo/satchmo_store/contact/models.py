@@ -58,6 +58,10 @@ class ContactManager(models.Manager):
 
         return contact
 
+SEX = (
+    ('m', u'男'),
+    ('w', u'女')
+)
 
 class Contact(models.Model):
     """
@@ -67,6 +71,7 @@ class Contact(models.Model):
     title = models.CharField(_(u"昵称"), max_length=30, blank=True, null=True)
     name = models.CharField(_(u"姓名"), max_length=30, )
     user = models.ForeignKey(User, blank=True, null=True, unique=True, verbose_name=_(u"用户"))
+    sex = models.CharField(_(u"性别"), max_length=1, blank=True, null=True, choices=SEX)
     dob = models.DateField(_(u"生日"),blank=True, null=True)
     phone = models.CharField(_(u"手机"), max_length=30, blank=True, null=True)
     fixed_phone = models.CharField(_(u"固定电话"), max_length=30, blank=True, null=True)
@@ -103,7 +108,7 @@ class Contact(models.Model):
             self.create_date = datetime.date.today()
         # Validate contact to user sync
         if self.user:
-            dirty = Falses
+            dirty = False
             user = self.user
             if user.email != self.email:
                 user.email = self.email

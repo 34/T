@@ -35,7 +35,7 @@
     </Shipper>
     <ShipTo>
       <CompanyName>{{contact.full_name}}</CompanyName>
-      <PhoneNumber>{{contact.primary_phone.phone|cut:"-"}}</PhoneNumber>
+      <PhoneNumber>{{contact.primary_phone|cut:"-"}}</PhoneNumber>
       <Address>
         <AddressLine1>{{contact.shipping_address.street1}}</AddressLine1>
         {% if contact.shipping_address.street2 %} <AddressLine2>{{contact.shipping_address.street2}}</AddressLine2> {% endif %}

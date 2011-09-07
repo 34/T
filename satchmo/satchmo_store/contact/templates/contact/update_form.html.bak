@@ -29,10 +29,7 @@
     <tr><td><label for="id_name">{% trans "姓名" %}{% if form.first_name.field.required %}*{% endif %}</label></td><td> {{ form.name }}</td></tr>
 	{% if form.first_name.errors %}<tr><td>&nbsp;</td><td>*** {{ form.first_name.errors|join:", " }}</td></tr>{% endif %}
 
-    <tr><td><label for="id_sex">{% trans "性别" %}{% if form.sex.field.required %}*{% endif %}</label></td><td> {{ form.sex }}</td></tr>
-	{% if form.sex.errors %}<tr><td>&nbsp;</td><td>*** {{ form.sex.errors|join:", " }}</td></tr>{% endif %}
-
-	<tr><td><label for="id_dob">{% trans "生日" %}{% if form.dob.field.required %}*{% endif %}</label></td><td> {{ form.dob }}</td></tr>
+    <tr><td><label for="id_dob">{% trans "生日" %}{% if form.dob.field.required %}*{% endif %}</label></td><td> {{ form.dob }}</td></tr>
     {% if form.dob.errors %}<tr><td>&nbsp;</td><td>*** {{ form.dob.errors|join:", " }}</td></tr>{% endif %}
 
     <tr><td><label for="id_phone">{% trans "手机" %}{% if form.phone.field.required %}*{% endif %}</label></td><td> {{ form.phone }}</td></tr>

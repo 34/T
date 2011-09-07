@@ -36,7 +36,7 @@ view = login_required(view)
 
 def update(request):
     """Update contact info"""
-
+    
     init_data = {}
     shop = Config.objects.get_current()
 
@@ -50,8 +50,9 @@ def update(request):
         new_data = request.POST.copy()
         form = ExtendedContactInfoForm(data=new_data, shop=shop, contact=contact, shippable=True,
             initial=init_data)
-
+        log.debug(form.is_valid())
         if form.is_valid():
+            log.debug('contact data valid')
             if contact is None and request.user:
                 contact = Contact(user=request.user)
             custID = form.save(contact=contact)
