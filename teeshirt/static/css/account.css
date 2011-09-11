@@ -47,3 +47,75 @@
     color: red;
     margin: 11px 5px;
 }
+.text_right{
+    text-align: right;
+}
+.text_left{
+    text-align: left;
+}
+.float_left{
+    display: block;
+    float: left;
+}
+.float_right{
+    display: block;
+    float: right;
+}
+.error{
+    color: red;
+}
+.login_block{
+    border: 1px solid #888888;
+    width:350px;
+    padding: 20px 0 10px 0;
+    float: left;
+    margin-bottom: 20px;
+}
+.login{
+    margin: 0 auto;
+}
+.login tr{
+    height: 19px;
+    line-height: 19px;
+}
+.login tr td input{
+    width:180px;
+    border: 1px solid #A5AFC3;
+    line-height: 19px;
+}
+.login td input#login_btn{
+    background-color: #F36F0B;
+    color: #FFFFFF;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    width: 100px;
+    height: 30px;
+    line-height: 30px;
+}
+.btn_link{
+    display: inline-block;
+    padding: 0 5px;
+    margin-right: 10px;
+    background-color: #F36F0B;
+    color: #FFFFFF;
+}
+.forgot_pwd{
+    display: inline-block;
+    margin-left: 10px;
+    height: 30px;
+    line-height: 30px;
+}
+.login_note{
+    display: block;
+    margin-left: 20px;
+}
+.capt input{
+    width: 50px;
+}
+.captcha{
+    width: 70px;
+    height: 23px;
+    margin-top: 10px;
+    margin-left: 5px;
+}
