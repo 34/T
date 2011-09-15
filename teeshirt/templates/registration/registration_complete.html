@@ -3,15 +3,15 @@
 {% load i18n %}
 
 {% block navbar %}
-   <li class="first"><a href="{{ shop_base }}/">{% trans "Home" %}</a></li>
+   <li class="first"><a href="{{ shop_base }}/">{% trans "Home" %}</a>》</li>
    <li>{% trans "Account Creation" %}</li>
 {% endblock %}
 
 {% block content %}
-<h3>{% trans "Account Creation" %}</h3>
-<p>{% trans "Thank you for signing up." %}
+<h3>账户注册成功</h3>
+<p>感谢您的注册，你已经成功登陆。
 {% if verify %}
-{% trans "An activation link has been sent to the email address you supplied, along with instructions for activating your account." %}
+已经向您注册的邮箱发送了验证链接，请登陆您的邮箱激活您的账户。
 {% endif %}
 </p>
 

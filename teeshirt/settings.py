@@ -1,3 +1,4 @@
+# coding=utf-8
 # Django settings for satchmo project.
 # This is a recommended base setting for further customization
 import os
@@ -110,6 +111,9 @@ INSTALLED_APPS = (
     'l10n',
     'satchmo_utils.thumbnail',
     'satchmo_store.contact',
+    
+    'captcha', 
+    
     'tax',
     'tax.modules.no',
     'tax.modules.area',

@@ -29,6 +29,11 @@
         <label>确认密码：</label>{{ form.password2 }}
         {% if form.password2.errors %}<div class="error_msg">*** {{ form.password2.errors|join:", " }}</div>{% endif %}
     </div>
+    <div class="gray">
+        <label>验证码：</label>
+        <div class="capt">{{ form.captcha }}<a href="">看不清楚？</a></div>
+        {% if form.captcha.errors %}<div class="error_msg">*** {{ form.captcha.errors|join:", " }}</div>{% endif %}
+    </div>
     {% if show_newsletter %}
     <div class="gray newsletter">
         <label>订阅邮件：</label>{{ form.newsletter }}

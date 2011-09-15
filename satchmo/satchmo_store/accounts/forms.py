@@ -12,6 +12,7 @@ from satchmo_store.contact.models import Contact
 from satchmo_utils.unique_id import generate_id
 from signals_ahoy.signals import form_init, form_initialdata
 from satchmo_store.accounts.models import AddressBook
+from captcha.fields import CaptchaField
 
 import logging
 import signals
@@ -43,6 +44,7 @@ class RegistrationForm(forms.Form):
         max_length=30, widget=forms.PasswordInput(), required=True)
     username = forms.CharField(label=_(u'用户名'),
         max_length=30, required=True)
+    captcha = CaptchaField(label=_(u'验证码'))
     next = forms.CharField(max_length=200, required=False, widget=forms.HiddenInput())
 
     def __init__(self, *args, **kwargs):

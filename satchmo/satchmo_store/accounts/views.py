@@ -3,7 +3,7 @@ from django.conf import settings
 from django.contrib.auth import login, REDIRECT_FIELD_NAME
 from django.contrib.sites.models import Site, RequestSite
 from django.core import urlresolvers
-from django.http import HttpResponseRedirect, QueryDict
+from django.http import HttpResponseRedirect, QueryDict, HttpResponse
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.utils.translation import ugettext_lazy as _

@@ -12,15 +12,23 @@
 {% endfor %}</p>
 {% endif %}
 
+<div class="login_block">
+
 <form method="post" action=".">{% csrf_token %}
-<table>
-<tr><td><label for="id_username">{% trans 'Email address' %}:</label></td><td>{{ form.username }}</td></tr>
-{% if form.username.errors %}<tr><td class="error" colspan="2">***{{ form.username.errors|join:", " }}</td></tr>{% endif %}
-<tr><td><label for="id_password">{% trans 'Password' %}:</label></td><td>{{ form.password }}</td></tr>
-{% if form.password.errors %}<tr><td class="error" colspan="2">***{{ form.password.errors|join:", " }}</td></tr>{% endif %}
+<table class="login">
+<tr><td class="text_right"><label for="id_username">Email地址/用户名：</label></td><td>{{ form.username }}</td></tr>
+<tr><td></td><td class="error">{% if form.username.errors %}***{{ form.username.errors|join:", " }}{% endif %}</td></tr>
+<tr><td class="text_right"><label for="id_password">密  码：</label></td><td>{{ form.password }}</td></tr>
+<tr><td></td><td class="error">{% if form.password.errors %}***{{ form.password.errors|join:", " }}{% endif %}</td></tr>
+<tr><td></td><td>
+    <input id="login_btn" type="submit" value="登      陆" />
+    {% url auth_password_reset as auth_password_reset %}
+    {% if auth_password_reset %}
+    <a class="forgot_pwd" href="{% url auth_password_reset %}">忘记密码啦？</a>
+    {% endif %}
+</td></tr>
 </table>
 
-<input type="submit" value="{% trans 'Login' %}" />
 <input type="hidden" name="next"
 {% if next %}
     value={{ next }} />
@@ -31,11 +39,9 @@
 </form>
 {% comment %} We jump through hoops with the urls so it doesn't bomb with django's built in unit tests.{% endcomment %}
 {% url registration_register as registration_register %}
-{% url auth_password_reset as auth_password_reset %}
 {% if registration_register %}
-    <p>{% trans "If you do not have an account, please" %} <a href="{% url registration_register %}">{% trans "click here" %}</a>.</p>
+    <p class="login_note"><span>提示：</span>还不是会员? 点击这里<a class="btn_link" href="{% url registration_register %}">免费注册</a></p>
 {% endif %}
-{% if auth_password_reset %}
-    <p>{% trans "If you do not remember your password, please" %} <a href="{% url auth_password_reset %}">{% trans "click here</a> to have it reset." %}</p>
-{% endif %}
+</div>
+
 {% endblock %}
