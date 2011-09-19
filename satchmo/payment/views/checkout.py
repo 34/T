@@ -10,7 +10,7 @@ from satchmo_utils.views import bad_or_missing
 from signals_ahoy.signals import form_initialdata
 from livesettings import config_get_group, config_value
 
-from satchmo_store.contact.forms import AddressBookForm, ShippingMethodForm, PaymentMethodForm
+from payment.forms import PaymentShippingAddressBookForm
 
 def success(request):
     """
@@ -35,7 +35,7 @@ def failure(request):
     )
 
 def confirm_order_info(request, template=None):
-    '''确认订单信息'''
+    '''纭璁㈠崟淇℃伅'''
     
     #First verify that the cart exists and has items
     tempCart = Cart.objects.from_request(request)
@@ -71,35 +71,26 @@ def confirm_order_info(request, template=None):
             if contact.shipping_address:
                 for item in contact.shipping_address.__dict__.keys():
                     init_data[item] = getattr(contact.shipping_address,item)
-            
-            
         else:
             # Allow them to login from this page.
             request.session.set_test_cookie()
         
         #Request additional init_data
-        form_initialdata.send(sender=AddressBookForm, initial=init_data,
+        form_initialdata.send(sender=PaymentShippingAddressBookForm, initial=init_data,
             contact=contact, cart=tempCart, shop=shop)
         
-        form = AddressBookForm(
+        form = PaymentShippingAddressBookForm(
             shop=shop,
             contact=contact,
             initial=init_data)
-        
-        ship_form = ShippingMethodForm()
-        payment_form = PaymentMethodForm()
         
     if shop.in_country_only:
         only_country = shop.sales_country
     else:
         only_country = None
     
-    
-    
     context = RequestContext(request, {
         'form': form,
-        'ship_form': ship_form,
-        'payment_form': payment_form,
         'country': only_country,
         'contact': contact,
         'addressbooklist': contact.addressbook_set.all(),

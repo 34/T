@@ -1,3 +1,4 @@
+# coding=utf-8
 """
 Configuration items for the shop.
 Also contains shopping cart and related classes.

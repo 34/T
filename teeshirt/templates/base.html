@@ -6,11 +6,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 {% endblock %}
 <head>
-    {% block extra-head %}{% endblock %}
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     {% block stylesheet %}
 		<link rel="stylesheet" href="{{ media_url }}css/base.css" />
 		<link rel="stylesheet" href="{{ media_url }}css/account.css" />
 	{% endblock %}
+	{% block extra-head %}{% endblock %}
     <title>{% block title %}{{ shop_name }}{% if pagetitle %}: {{ pagetitle }}{% endif %}{% endblock %}</title>
     {% plugin_point "page_head" %}
 </head>

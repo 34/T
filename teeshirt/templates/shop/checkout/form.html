@@ -2,7 +2,9 @@
 {% load i18n %}
 
 {% block extra-head %}
-{% include "contact/_contact_info_form.html" %}
+{% include "shop/_jquery.html" %}
+{% include "shop/_jquery_form.html" %}
+{% include "contact/_addressbook_form_js.html" %}
 {% endblock %}
 
 {% block navbar %}
@@ -19,7 +21,7 @@
     <li>{% trans "确认收货" %}</li>
 </ul>
 </div>
-<div id="confirm_order_info">
+<div>
 <h4>{% trans "提交订单之前，请认真核对以下信息" %}</h4>
 {% if form.non_field_errors %}
 <h2>{% trans "请修正以下错误：" %}</h2>
@@ -42,7 +44,6 @@
 </form>
 {% endif %}
 
-
 <div id="boxaddress">
 	<h1>收货地址</h1>
 	<div>
@@ -52,9 +53,9 @@
 			<p><input type="radio" name="addressbook" value="{{addressbook.id}}" {% if addressbook.is_default_shipping %}checked="checked"{% endif %}/>{{addressbook}}</p>
 			{% endfor %}
 		{% endif %}
-		<p><input type="radio" name="addressbook" />添加新地址</p>
+		<p><input id="id_add_addressbook" type="radio" name="addressbook" {% if not addressbooklist %}checked="checked"{% endif %}/>添加新地址</p>
 		</div>
-		<div id="edit_address">
+		<div id="edit_address" class="invisible">
 			<h3>编辑收货人信息</h3>
 			<form action="" method="post" >{% csrf_token %}
 				<div>
@@ -69,12 +70,12 @@
 									<table><tr>
 										<td>{{ form.province }}</td>
 										<td>
-											<select name="ciry">
+											<select name="city">
 												<option>---城市---</option>
 											</select>
 										</td>
 										<td>
-											<select name="ciry">
+											<select name="region">
 												<option>---县/区---</option>
 											</select>
 										</td>
@@ -97,9 +98,9 @@
 				<div id="address_save"><button type="submit">保存</button></div>
 			</form>
 		</div>
-		<div id="address_add">
+		<div id="address_add" {% if not addressbooklist %}class="visible"{% else %}class="invisible"{% endif %}>
 			<h3>添加收货人信息</h3>
-			<form action="" method="post" >{% csrf_token %}
+			<form action="{% url satchmo_addressbook_add %}" method="post" >{% csrf_token %}
 				<div>
 					<table>
 						<tbody>
@@ -112,12 +113,12 @@
 									<table><tr>
 										<td>{{ form.province }}</td>
 										<td>
-											<select name="ciry">
+											<select name="city" id="id_city">
 												<option>---城市---</option>
 											</select>
 										</td>
 										<td>
-											<select name="ciry">
+											<select name="region" id="id_region">
 												<option>---县/区---</option>
 											</select>
 										</td>
@@ -142,13 +143,35 @@
 		</div>
 	</div>
 </div>
-
-<div id="shipmethod">
-	{{ship_form}}
-	{{payment_form}}
+<div id="confirm_order_info">
+	<form method="post" action="{% url satchmo_checkout-step1 %}">{% csrf_token %}
+		<div id="shippingaddress" class="invisible">
+			{{ form.name }}
+			{{ form.province }}
+			{{ form.city }}
+			{{ form.region }}
+			{{ form.street }}
+			{{ form.postal_code }}
+			{{ form.phone }}
+			{{ form.fixed_phone }}
+		</div>
+		<div id="shipmethod">
+			<h3>送货方式</h3>
+			{{form.shippingmethod}}
+			<h3>支付方式</h3>
+			{{form.paymentmethod}}
+			
+			{% if form.discount.is_hidden %}
+			{{ form.discount }}
+			{% else %}
+				<h3>折扣</h3>
+				<label for="id_discount">折扣码：</label>{{ form.discount }}
+			{% if form.discount.errors %}{{ form.discount.errors|join:", " }}{% endif %}
+			{% endif %}
+		</div>
+	</form>
 </div>
-
-<form method="post" action="{% url satchmo_checkout-step1 %}">{% csrf_token %}
+<!--<form method="post" action="{% url satchmo_checkout-step1 %}">{% csrf_token %}
 
 <table>
     <tr><td colspan="2"><p>{% trans "带*号的为必填信息" %}</p></td></tr>
@@ -190,6 +213,6 @@
 
 	<tr><td></td><td><input type="submit" value="{% trans "Continue Checkout" %}"/></td></tr>
 </table>
-</form>
+</form>-->
 </div>
 {% endblock %}

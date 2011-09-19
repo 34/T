@@ -94,18 +94,20 @@ class AddressBookForm(forms.Form):
     phone = forms.CharField(max_length=30, label=_(u'手机'), required=False)
     fixed_phone = forms.CharField(max_length=30, label=_(u'固定电话'), required=False)
     city = forms.CharField(max_length=30, label=_(u'城市'), required=False)
-    region = forms.CharField(max_length=100, label=_(u'县/区'))
+    region = forms.CharField(max_length=100, label=_(u'县/区'), required=False)
     street = forms.CharField(max_length=100, label=_(u'详细地址'), required=False, widget=forms.TextInput(attrs={'size':'80'}))
     postal_code = forms.CharField(max_length=10, label=_(u'邮政编码'), required=False, widget=forms.TextInput(attrs={'size':'10'}))
     is_default_shipping = forms.BooleanField(label=_(u"设为默认地址"), required=False)
     
-    def __init__(self, contact, shop, *args, **kwargs):     
-        super(AddressBookForm, self).__init__(*args, **kwargs)
-        
+    def __init__(self, *args, **kwargs):
+        contact = kwargs.pop('contact', None)
         self._contact = contact
+        shop = kwargs.pop('shop', None)
         if not shop:
             shop = Config.objects.get_current()
         self._shop = shop
+        
+        super(AddressBookForm, self).__init__(*args, **kwargs)
         
         self.required_shipping_data = config_value('SHOP', 'REQUIRED_SHIPPING_DATA')
         self._local_only = shop.in_country_only
@@ -130,7 +132,22 @@ class AddressBookForm(forms.Form):
         log.info('Sending form_init signal: %s', self.__class__)
         form_init.send(self.__class__, form=self)
         
-
+    #def save(self):
+    #    data = self.cleaned_data.copy()
+    #
+    #    country = data['country']
+    #    if not isinstance(country, Country):
+    #        country = Country.objects.get(pk=country)
+    #        data['country'] = country
+    #    data['country_id'] = country.id
+    #
+    #    for field in customer.__dict__.keys():
+    #        try:
+    #            setattr(customer, field, data[field])
+    #        except KeyError:
+    #            pass
+    #
+    #    customer.save()
 
 class ProxyContactForm(forms.Form):
     def __init__(self, *args, **kwargs):

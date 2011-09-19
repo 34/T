@@ -1,0 +1,35 @@
+<script type="text/javascript">
+var satchmo = satchmo || {};
+
+satchmo.add_addressbook_toggler = function(){
+	$('input[name="addressbook"]').click(function() {
+		if ($('#id_add_addressbook')[0].checked)
+			$('#address_add').show();
+		else
+			$('#address_add').hide();
+	});
+}
+
+satchmo.get_sub_area_info = function(id, target){
+	$('#address_add #'+id).change(function(){
+		var val = $(this).val();
+		$.ajax({
+			type: "get",
+			url: "{% url satchmo_ajax_get_sub_areas %}",
+			data: {'name': val},
+			success: function(data){
+				if (data){
+					$('#address_add #'+target).html(data)	
+				}
+			},
+			dataType: "html"
+		});
+	});
+}
+
+$(document).ready(function() {
+	satchmo.add_addressbook_toggler();
+	satchmo.get_sub_area_info('id_province', 'id_city');
+	satchmo.get_sub_area_info('id_city', 'id_region');
+});
+</script>

@@ -427,3 +427,5 @@ background-color: #ccc;
 }
 .blank10{height:10px;}
 .h_blank50{display: inline-block; padding-right: 50px;}
+.visible{display: block;}
+.invisible{display: none;}

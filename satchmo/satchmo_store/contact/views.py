@@ -7,13 +7,47 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.utils.translation import ugettext
 from satchmo_store.contact import signals, CUSTOMER_ID
-from satchmo_store.contact.forms import ExtendedContactInfoForm, ContactInfoForm, area_choices_for_country
+from satchmo_store.contact.forms import ExtendedContactInfoForm, ContactInfoForm, area_choices_for_country, AddressBookForm
 from satchmo_store.contact.models import Contact
 from satchmo_store.shop.models import Config
 import logging
+from l10n.models import AdminArea
 
 log = logging.getLogger('satchmo_store.contact.views')
 
+def add_addressbook(request):
+    init_data = {}
+    
+    contact = request.user.contact_set.all()[0]
+    init_data['contact'] = contact.id
+    shop = Config.objects.get_current()
+    
+    if request.method == "POST":
+        new_data = request.POST.copy()
+        form = AddressBookForm(data=new_data, shop=shop, contact=contact, initial=init_data)
+        
+        if form.is_valid():
+            addressbook = form.save()
+            log.debug('-1- addressbook save success.')
+        log.debug(form.errors)
+    redirect_to = urlresolvers.reverse('satchmo_checkout-step1')    
+    return http.HttpResponseRedirect(redirect_to)
+    
+def ajax_get_sub_areas(request):
+    parent_name = request.GET.get('name')
+    log.debug(parent_name)
+    
+    areas = AdminArea.objects.filter(parent__name=parent_name)
+    log.debug(len(areas))
+    res = []
+    for a in areas:
+        res.append((a.name, a.name))
+    context = RequestContext(request, {
+            'areas': res,
+        })
+    return render_to_response('contact/_state_choices.html',
+                                  context_instance=context)
+    
 def view(request):
     """View contact info."""
     try:
