@@ -6,22 +6,23 @@
 {% endblock %}
 
 {% block navbar %}
-   <li class="first"><a href="{{ shop_base }}/">{% trans "Home" %}</a>��</li>
-   <li>{% trans "Checkout" %}</li>
+   <li class="first"><a href="{{ shop_base }}/">{% trans "首页" %}</a></li>
+   <li>{% trans "结算" %}</li>
 {% endblock %}
 
 {% block content %}
-<h3>{% trans "Checkout" %}</h3>
+<h3>{% trans "结算" %}</h3>
 <div id="checkoutprogress">
 <ul>
-    <li class="first active">{% trans "Ship/Bill" %}</li>
-    <li>{% trans "Payment" %}</li>
-    <li>{% trans "Confirmation" %}</li>
+    <li class="first active">{% trans "确认订单信息" %}</li>
+    <li>{% trans "支付" %}</li>
+    <li>{% trans "确认收货" %}</li>
 </ul>
 </div>
-<h4>{% trans "Please complete the following information in order to submit your order." %}</h4>
+<div id="confirm_order_info">
+<h4>{% trans "提交订单之前，请认真核对以下信息" %}</h4>
 {% if form.non_field_errors %}
-<h2>{% trans "Please correct the following error:" %}</h2>
+<h2>{% trans "请修正以下错误：" %}</h2>
 {{ form.non_field_errors }}
 {% endif %}
 {% if user.is_anonymous %}
@@ -41,9 +42,116 @@
 </form>
 {% endif %}
 
+
+<div id="boxaddress">
+	<h1>收货地址</h1>
+	<div>
+		<div id="address_list">
+		{% if addressbooklist|length %}
+			{% for addressbook in addressbooklist %}
+			<p><input type="radio" name="addressbook" value="{{addressbook.id}}" {% if addressbook.is_default_shipping %}checked="checked"{% endif %}/>{{addressbook}}</p>
+			{% endfor %}
+		{% endif %}
+		<p><input type="radio" name="addressbook" />添加新地址</p>
+		</div>
+		<div id="edit_address">
+			<h3>编辑收货人信息</h3>
+			<form action="" method="post" >{% csrf_token %}
+				<div>
+					<table>
+						<tbody>
+							<tr>
+								<td>收货人：</td><td colspan="3">{{ form.name }}</td>
+							</tr>
+							<tr>
+								<td>地区：</td>
+								<td colspan="3">
+									<table><tr>
+										<td>{{ form.province }}</td>
+										<td>
+											<select name="ciry">
+												<option>---城市---</option>
+											</select>
+										</td>
+										<td>
+											<select name="ciry">
+												<option>---县/区---</option>
+											</select>
+										</td>
+									</tr></table>
+								</td>
+							</tr>
+							<tr>
+								<td>详细地址：</td><td colspan="3">{{ form.street }}</td>
+							</tr>
+							<tr>
+								<td>邮编：</td><td colspan="3">{{ form.postal_code }}</td>
+							</tr>
+							<tr>
+								<td>手机：</td><td>{{ form.phone }}</td>
+								<td>固定电话：</td><td>{{ form.fixed_phone }}</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div id="address_save"><button type="submit">保存</button></div>
+			</form>
+		</div>
+		<div id="address_add">
+			<h3>添加收货人信息</h3>
+			<form action="" method="post" >{% csrf_token %}
+				<div>
+					<table>
+						<tbody>
+							<tr>
+								<td>收货人：</td><td colspan="3">{{ form.name }}</td>
+							</tr>
+							<tr>
+								<td>地区：</td>
+								<td colspan="3">
+									<table><tr>
+										<td>{{ form.province }}</td>
+										<td>
+											<select name="ciry">
+												<option>---城市---</option>
+											</select>
+										</td>
+										<td>
+											<select name="ciry">
+												<option>---县/区---</option>
+											</select>
+										</td>
+									</tr></table>
+								</td>
+							</tr>
+							<tr>
+								<td>详细地址：</td><td colspan="3">{{ form.street }}</td>
+							</tr>
+							<tr>
+								<td>邮编：</td><td colspan="3">{{ form.postal_code }}</td>
+							</tr>
+							<tr>
+								<td>手机：</td><td>{{ form.phone }}</td>
+								<td>固定电话：</td><td>{{ form.fixed_phone }}</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div id="address_save"><button type="submit">添加并送到这个地址</button></div>
+			</form>
+		</div>
+	</div>
+</div>
+
+<div id="shipmethod">
+	{{ship_form}}
+	{{payment_form}}
+</div>
+
 <form method="post" action="{% url satchmo_checkout-step1 %}">{% csrf_token %}
+
 <table>
-    <tr><td colspan="2"><p>{% trans "You'll need to fill out at least the fields with a *" %}</p></td></tr>
+    <tr><td colspan="2"><p>{% trans "带*号的为必填信息" %}</p></td></tr>
 
 	{% ifequal paymentmethod_ct 1 %}
 	    {# If we only have one payment method, then the form renders it as a hidden field #}{{ form.paymentmethod }}
@@ -66,7 +174,6 @@
     <tr><td><label for="id_phone">{% trans "Phone number" %}{% if form.phone.field.required %}*{% endif %}</label></td><td> {{ form.phone }}</td></tr>
     {% if form.phone.errors %}<tr><td class="error" colspan="2">*** {{ form.phone.errors|join:", " }}</td></tr>{% endif %}
 
-    {% block billing-info %}{% include "contact/_contact_info_form_billing.html" %}{% endblock %}
 
 {% if cart.is_shippable %}
     {% block shipping-info %}{% include "contact/_contact_info_form_shipping.html" %}{% endblock %}
@@ -84,4 +191,5 @@
 	<tr><td></td><td><input type="submit" value="{% trans "Continue Checkout" %}"/></td></tr>
 </table>
 </form>
+</div>
 {% endblock %}

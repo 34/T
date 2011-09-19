@@ -3,14 +3,35 @@ body{
     margin: 0;
 	background-color: #f7f7f7;
 }
-ul{
+/*ul{
 list-style-type: none;
 padding: 0;
 margin: 0;
-}
-h1, h2, h4, ul, li, li a, p {
+}*/
+/*h1, h2, h4, ul, li, li a, p {
 float: left;
+}*/
+
+/* =============== Navigation Bars ===================== */
+
+#navbar ul {		
+	margin: 0;
+	padding: 0px;
 }
+#navbar ul li { 
+	display: inline; 
+	list-style: none; 		
+}
+#navbar ul li { 
+	padding-left: 0.7em; 
+	padding-right: 0.5em; 
+	border-left: 1px solid #b0b0b0; 	
+}  
+#navbar ul li.first {
+	padding-left: 0em; 
+	border-left: none; 
+}
+
 body, div, dl, dt, dd, ul, ol, li, pre, form, fieldset, input, button, select, option, textarea, p, blockquote, th, td {
 font: 12px/20px arial, helvetica, verdana, tahoma, sans-serif;
 }
@@ -334,3 +355,75 @@ div.product-item:nth-of-type(6n+6){
 }
 
 /* end product detail */
+
+/* shopping cart style */
+.tblSty01{
+	width: 996px;
+	border: 1px;
+}
+.tblSty01 thead{
+	background-color: gray;
+	color: white;
+}
+.tblSty01 thead th{
+	padding: 5px 0;
+}
+.tblSty01 tbody tr td{
+	padding: 10px;
+}
+.doubleborder{
+	width: 960px;
+	margin: 0 auto;
+	border-top: 1px solid gray;
+	border-bottom: 1px solid gray;
+}
+.doubleborder td{padding: 5px 0;}
+/* end shopping cart style*/
+
+/* check out progress style */
+#checkoutprogress {
+border-style: solid;
+border-width: 1px;
+padding: 3px;
+margin-bottom: 25px;	
+}
+
+#checkoutprogress ul {
+display: inline;
+margin-left: 0;
+padding-left: 0;
+border: none;
+}
+
+#checkoutprogress ul li {
+margin-left: 0;
+padding-left: 2px;
+display: inline;
+list-style: none;
+}
+
+#checkoutprogress ul li:before {
+content: "\0020 \0020 \0020 \00BB \0020";
+display: inline;
+list-style: none;
+}
+
+#checkoutprogress ul li.first:before {
+content: " ";
+}
+
+#checkoutprogress li.active {
+background-color: #ccc;
+}
+/* end check out progress style */
+
+.box01{
+	padding: 15px 20px;
+	text-align: right;
+}
+.box_with_border{
+	padding: 1px;
+	border: 1px solid gray;
+}
+.blank10{height:10px;}
+.h_blank50{display: inline-block; padding-right: 50px;}

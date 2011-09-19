@@ -8,7 +8,11 @@ from livesettings import config_value
 from satchmo_store.contact.models import Contact, AddressBook
 from satchmo_store.shop.models import Config
 from satchmo_store.shop.utils import clean_field
-from signals_ahoy.signals import form_init, form_initialdata, form_postsave
+
+from shipping.config import shipping_choices
+from payment.config import labelled_gateway_choices
+
+from signals_ahoy.signals import form_init, form_initialdata, form_postsave, form_validate
 import datetime
 import logging
 import signals
@@ -23,10 +27,110 @@ def area_choices_for_country(country, translator=_):
     if country:
         areas = country.adminarea_set.filter(active=True)
         if areas.count()>0:
-            choices = [('',translator("---Please Select---"))]
+            choices = [('',translator(u"---省份/直辖市---"))]
             choices.extend([(area.abbrev or area.name, area.name) for area in areas])
 
     return choices
+
+class ShippingMethodForm(forms.Form):
+    shippingmethod = forms.ChoiceField(
+            label=_(u'送货方式'),
+            choices=shipping_choices(),
+            widget=forms.RadioSelect,
+            required=True
+            )
+    
+    def __init__(self, *args, **kwargs):
+        super(ShippingMethodForm, self).__init__(*args, **kwargs)
+
+        shipping_choices_ = shipping_choices()
+        
+        if len(shipping_choices_) == 1:
+            self.fields['shippingmethod'].widget = forms.HiddenInput(attrs={'value' : shipping_choices_[0][0]})
+        else:
+            self.fields['shippingmethod'].widget = forms.RadioSelect(attrs={'value' : shipping_choices_[0][0]})
+        self.fields['shippingmethod'].choices = shipping_choices_
+    
+    def clean(self):
+        # allow additional validation
+        form_validate.send(ShippingMethodForm, form=self)
+        return self.cleaned_data
+    
+class PaymentMethodForm(forms.Form):
+    paymentmethod = forms.ChoiceField(
+            label=_(u'支付方式'),
+            choices=labelled_gateway_choices(),
+            widget=forms.RadioSelect,
+            required=True
+            )
+
+    def __init__(self, *args, **kwargs):
+        super(PaymentMethodForm, self).__init__(*args, **kwargs)
+        # Send a signal to perform additional filtering of available payment methods.
+        # Receivers have cart/order passed in variables to check the contents and modify methods
+        # list if neccessary.
+        payment_choices = labelled_gateway_choices()
+        #signals.payment_methods_query.send(
+        #        PaymentMethodForm,
+        #        methods=payment_choices,
+        #        cart=cart,
+        #        order=order,
+        #        contact=self._contact
+        #        )
+        if len(payment_choices) == 1:
+            self.fields['paymentmethod'].widget = forms.HiddenInput(attrs={'value' : payment_choices[0][0]})
+        else:
+            self.fields['paymentmethod'].widget = forms.RadioSelect(attrs={'value' : payment_choices[0][0]})
+        self.fields['paymentmethod'].choices = payment_choices
+
+    def clean(self):
+        # allow additional validation
+        form_validate.send(PaymentMethodForm, form=self)
+        return self.cleaned_data
+
+class AddressBookForm(forms.Form):
+    contact = forms.IntegerField(label=_(u'联系人'), required=True)
+    name = forms.CharField(max_length=30, label=_(u'姓名'), required=False)
+    phone = forms.CharField(max_length=30, label=_(u'手机'), required=False)
+    fixed_phone = forms.CharField(max_length=30, label=_(u'固定电话'), required=False)
+    city = forms.CharField(max_length=30, label=_(u'城市'), required=False)
+    region = forms.CharField(max_length=100, label=_(u'县/区'))
+    street = forms.CharField(max_length=100, label=_(u'详细地址'), required=False, widget=forms.TextInput(attrs={'size':'80'}))
+    postal_code = forms.CharField(max_length=10, label=_(u'邮政编码'), required=False, widget=forms.TextInput(attrs={'size':'10'}))
+    is_default_shipping = forms.BooleanField(label=_(u"设为默认地址"), required=False)
+    
+    def __init__(self, contact, shop, *args, **kwargs):     
+        super(AddressBookForm, self).__init__(*args, **kwargs)
+        
+        self._contact = contact
+        if not shop:
+            shop = Config.objects.get_current()
+        self._shop = shop
+        
+        self.required_shipping_data = config_value('SHOP', 'REQUIRED_SHIPPING_DATA')
+        self._local_only = shop.in_country_only
+        self.enforce_state = config_value('SHOP','ENFORCE_STATE')
+        
+        self._default_country = shop.sales_country
+        shipping_country = (self._contact and getattr(self._contact.shipping_address, 'country', None)) or self._default_country
+        self.fields['country'] = forms.ModelChoiceField(shop.countries(), required=False, label=_(u'国家'), empty_label=None, initial=shipping_country.pk)
+        
+        if self.enforce_state:
+            # Get areas for the initial country selected.
+            shipping_areas = area_choices_for_country(shipping_country)
+
+            shipping_state = (self._contact and getattr(self._contact.shipping_address, 'state', None)) or selection
+            self.fields['province'] = forms.ChoiceField(choices=shipping_areas, initial=shipping_state, required=False, label=_(u'地区'))
+
+        for f in self.fields:
+            fld = self.fields[f]
+            if fld.required:
+                fld.label = (fld.label or f) + '*'
+                
+        log.info('Sending form_init signal: %s', self.__class__)
+        form_init.send(self.__class__, form=self)
+        
+
 
 class ProxyContactForm(forms.Form):
     def __init__(self, *args, **kwargs):

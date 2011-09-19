@@ -9,7 +9,8 @@ log = logging.getLogger('payment.urls')
 ssl = get_satchmo_setting('SSL', default_value=False)
 
 urlpatterns = patterns('payment.views',
-     (r'^$', 'contact.contact_info_view', {'SSL': ssl}, 'satchmo_checkout-step1'),
+     #(r'^$', 'contact.contact_info_view', {'SSL': ssl}, 'satchmo_checkout-step1'),
+     (r'^$', 'checkout.confirm_order_info', {'SSL': ssl}, 'satchmo_checkout-step1'),
      (r'^success/$', 'checkout.success', {'SSL' : ssl}, 'satchmo_checkout-success'),
      (r'custom/charge/(?P<orderitem_id>\d+)/$', 'balance.charge_remaining', {}, 'satchmo_charge_remaining'),
      (r'custom/charge/$', 'balance.charge_remaining_post', {}, 'satchmo_charge_remaining_post'),

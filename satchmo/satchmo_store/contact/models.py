@@ -68,9 +68,10 @@ class Contact(models.Model):
     A customer, supplier or any individual that a store owner might interact
     with.
     """
+    country = models.ForeignKey(Country, null=True, verbose_name=_(u'国家'))
+    user = models.ForeignKey(User, blank=True, null=True, unique=True, verbose_name=_(u"用户"))
     title = models.CharField(_(u"昵称"), max_length=30, blank=True, null=True)
     name = models.CharField(_(u"姓名"), max_length=30, )
-    user = models.ForeignKey(User, blank=True, null=True, unique=True, verbose_name=_(u"用户"))
     sex = models.CharField(_(u"性别"), max_length=1, blank=True, null=True, choices=SEX)
     dob = models.DateField(_(u"生日"),blank=True, null=True)
     phone = models.CharField(_(u"手机"), max_length=30, blank=True, null=True)
@@ -145,7 +146,7 @@ class AddressBook(models.Model):
     is_default_shipping = models.BooleanField(_(u'默认地址'), default=False)
 
     def __unicode__(self):
-       return u'%s' % self.name
+       return u'%s    %s%s%s %s    %s' % (self.name, self.province, self.city, self.region, self.street, self.postal_code)
 
     def save(self, **kwargs):
         """

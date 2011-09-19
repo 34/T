@@ -1,3 +1,4 @@
+# coding=utf-8
 ####################################################################
 # First step in the order process - capture all the demographic info
 #####################################################################
@@ -44,10 +45,11 @@ def contact_info(request, **kwargs):
     if request.user.is_authenticated():
         if request.user.email:
             init_data['email'] = request.user.email
-        if request.user.first_name:
-            init_data['first_name'] = request.user.first_name
-        if request.user.last_name:
-            init_data['last_name'] = request.user.last_name
+        # -arthur-
+        #if request.user.first_name:
+        #    init_data['first_name'] = request.user.first_name
+        #if request.user.last_name:
+        #    init_data['last_name'] = request.user.last_name
     try:
         contact = Contact.objects.from_request(request, create=False)
     except Contact.DoesNotExist:
@@ -89,6 +91,7 @@ def contact_info(request, **kwargs):
             if contact.shipping_address:
                 for item in contact.shipping_address.__dict__.keys():
                     init_data["ship_"+item] = getattr(contact.shipping_address,item)
+            # -arthur-
             #if contact.billing_address:
             #    for item in contact.billing_address.__dict__.keys():
             #        init_data[item] = getattr(contact.billing_address,item)

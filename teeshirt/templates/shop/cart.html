@@ -1,0 +1,94 @@
+{% extends "shop/base.html" %}
+{% load i18n %}
+{% load satchmo_cart %}
+{% load satchmo_currency %}
+{% load satchmo_util %}
+{% load satchmo_product %}
+{% load satchmo_discounts %}
+{% load normalize_decimal %}
+{% load thumbnail %}
+
+{% block navbar %}
+    <li class="first"><a href="{{shop_base}}/">{% trans "Home" %}</a></li>
+    <li>{% trans "Cart" %}</li>
+{% endblock %}
+
+{% block content %}
+
+{% if error_message %}
+<div class="error">{{ error_message }}</div>
+{% endif %}
+
+{% if not cart|length %}
+    <div class="cartitle"><h4>{% trans "您的购物车为空，请继续挑选你喜爱的T恤" %}</h4></div>
+{% else %}
+    <div class="cartitle"><h4>{% trans "我的购物车" %}</h4></div>
+    <div class="box_with_border">
+	<table id="tbl_cart" class="tblSty01" border="0" cellpadding="0" cellspacing="0">
+		<thead>
+			<tr>
+				<th>{% trans "商品" %}</th>
+				<th>{% trans "名称" %}</th>
+				<th>{% trans "数量" %}</th>					
+				{% if sale %}
+					<th>{% trans "原价" %}</th>
+					<th>{% trans "售价" %}</th>
+				{% else %}
+					<th>{% trans "价格" %}</th>
+				{% endif %}			
+				<th align="center">{% if default_view_tax %}{% trans "Total<br/>(incl.&nbsp;tax)" %}{% else %}{% trans "小计" %}{% endif %}</th>
+				<th></th>
+			</tr>
+		</thead>
+		<tbody id="cartitems">
+    {% for cartitem in cart %}
+			<tr>
+				<td align="center">
+					{% if cartitem.product.main_image %}
+					{% thumbnail cartitem.product.main_image.picture "66x48" crop="center" as image %}
+					<a href="{{ cartitem.product.get_absolute_url }}"><img src="{{ image }}" width="{{image.width}}" height="{{image.height}}" /></a>
+					{% endif %}
+				<td align="center"><a href="{{cartitem.product.get_absolute_url}}">{{ cartitem.description }}</a></td>
+				{% if sale %}<td align="center">{{ cartitem.product.unit_price|currency }}</td>{% endif %}
+				<td align="center">
+					<form class="qtyform" id="form-{{ cartitem.id }}" action="{% url satchmo_cart_set_qty %}" method="post">{% csrf_token %}
+						<input type="hidden" name="cartitem" value="{{ cartitem.id }}" />
+						<input type="text" name="quantity" id="id_quantity" value="{{ cartitem.quantity|normalize_decimal }}" />
+						<input type="submit" id="id_update_submit" value="{% trans 'update amount' %}" />
+					</form>
+				</td>
+				<td align="center">{{ cartitem.product|discount_price:sale|currency }}</td>
+				<td align="center">{{ cartitem|discount_line_total:sale|currency }}</td>
+				<td>
+				<form action="{% url satchmo_cart_remove %}" method="post">{% csrf_token %}
+					<input type="hidden" name="cartitem" value="{{ cartitem.id }}" />
+					<input type="submit" value="{% trans 'Remove' %}" />
+				</form>
+				</td>
+			</tr>
+			{% cartitem_custom_details cartitem %}
+			{% cartitem_subscription_details cartitem %}
+		
+    {% endfor %}
+		</tbody>
+	</table>
+	<table id="cartsummary" class="doubleborder">
+		<tr>
+			<td colspan="{% if sale %}6{% else %}5{% endif %}" align="right">
+				{% trans "产品数量总计" %}：<span class="h_blank50">{{ cart|length }}件</span>
+				{% trans "产品金额总计(不含运费)" %}：<span>{{ cart|discount_cart_total:sale|currency }}</span>
+			</td>
+		</tr>
+	</table>
+    {% if sale %}
+	{% include "product/some_discount_eligible.html" %}
+	{% endif %}
+
+    <div class="box01">
+		<a href="{% url satchmo_shop_home %}">{% trans "继续选购" %}</a>
+		<a href="{% url satchmo_checkout-step1 %}">{% trans "结算" %}</a>
+	</div>
+	</div>
+	<div class="blank10"></div>
+{% endif %}
+{% endblock %}
